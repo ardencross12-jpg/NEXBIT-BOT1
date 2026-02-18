@@ -43,19 +43,18 @@ def get_rates():
     return cursor.fetchone()
 
 # ---------------- BOT ----------------
-class Bot(discord.Client):
-    def init(self):
-        intents = discord.Intents.default()
-        intents.message_content = False
-        intents.members = True
-        super().init(intents=intents)
-        self.tree = app_commands.CommandTree(self)
+from discord.ext import commands
 
-    async def setup_hook(self):
-        guild = discord.Object(id=GUILD_ID)
-        await self.tree.sync(guild=guild)
+intents = discord.Intents.default()
+intents.members = True
 
-bot = Bot()
+bot = commands.Bot(command_prefix="!", intents=intents)
+
+@bot.event
+async def on_ready():
+    guild = discord.Object(id=GUILD_ID)
+    await bot.tree.sync(guild=guild)
+    print(f"Logged in as {bot.user}")
 
 def has_exchanger_role(user):
     return any(role.id == EXCHANGER_ROLE_ID for role in user.roles)
