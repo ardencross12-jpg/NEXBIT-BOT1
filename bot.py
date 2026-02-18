@@ -3,6 +3,22 @@ from discord import app_commands
 import sqlite3
 import os
 
+from flask import Flask
+from threading import Thread
+
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Bot is running!"
+
+def run_web():
+    app.run(host='0.0.0.0', port=10000)
+
+def keep_alive():
+    t = Thread(target=run_web)
+    t.start()
+    
 TOKEN = os.getenv("TOKEN")
 
 # 🔁 REPLACE THESE WITH YOUR REAL IDS
@@ -151,5 +167,5 @@ async def stats(interaction: discord.Interaction):
         f"Total Output: {total_result}",
         ephemeral=True
     )
-
+keep_alive()
 bot.run(TOKEN)
