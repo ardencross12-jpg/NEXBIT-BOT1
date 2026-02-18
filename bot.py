@@ -46,6 +46,7 @@ def get_rates():
 class Bot(discord.Client):
     def init(self):
         intents = discord.Intents.default()
+        intents.message_content = False
         intents.members = True
         super().init(intents=intents)
         self.tree = app_commands.CommandTree(self)
